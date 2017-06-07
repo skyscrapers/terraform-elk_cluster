@@ -60,6 +60,7 @@ resource "aws_security_group_rule" "instance_ingress_es_java_from_elb" {
 }
 
 resource "aws_security_group_rule" "instance_ingress_logstash_from_elb" {
+  count                    = "${var.logstash_enabled ? 1 : 0}"
   type                     = "ingress"
   protocol                 = "tcp"
   from_port                = "${var.logstash_port}"
@@ -69,6 +70,7 @@ resource "aws_security_group_rule" "instance_ingress_logstash_from_elb" {
 }
 
 resource "aws_security_group_rule" "instance_ingress_kibana_from_elb" {
+  count                    = "${var.kibana_enabled ? 1 : 0}"
   type                     = "ingress"
   protocol                 = "tcp"
   from_port                = "${var.kibana_port}"
@@ -126,6 +128,7 @@ resource "aws_security_group_rule" "elb_ingress_logstash_from_outside" {
   source_security_group_id = "${element(var.elb_ingress_sgs, count.index)}"
 }
 resource "aws_security_group_rule" "elb_egress_logstash_to_instance" {
+  count                    = "${var.logstash_enabled ? 1 : 0}"
   type                     = "egress"
   protocol                 = "tcp"
   from_port                = "${var.logstash_port}"
@@ -144,6 +147,7 @@ resource "aws_security_group_rule" "elb_ingress_kibana_from_outside" {
   source_security_group_id = "${element(var.elb_ingress_sgs, count.index)}"
 }
 resource "aws_security_group_rule" "elb_egress_kibana_to_instance" {
+  count                    = "${var.logstash_enabled ? 1 : 0}"
   type                     = "egress"
   protocol                 = "tcp"
   from_port                = "${var.kibana_port}"
