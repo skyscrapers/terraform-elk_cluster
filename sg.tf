@@ -1,22 +1,22 @@
 resource "aws_security_group" "elk_sg" {
-  name        = "sg_${var.name}"
+  name        = "sg_${var.name}_${var.project}_${var.environment}"
   description = "Security group that is needed for the ELK cluster"
   vpc_id      = "${var.vpc_id}"
 
   tags {
-    Name        = "sg_${var.name}"
+    Name        = "sg_${var.name}_${var.project}_${var.environment}"
     Environment = "${var.environment}"
     Project     = "${var.project}"
   }
 }
 
 resource "aws_security_group" "elk_elb_sg" {
-  name        = "sg_elb_${var.name}"
+  name        = "sg_elb_${var.name}_${var.project}_${var.environment}"
   description = "Security group that is needed for the ELK cluster ELB"
   vpc_id      = "${var.vpc_id}"
 
   tags {
-    Name        = "sg_elb_${var.name}"
+    Name        = "sg_elb_${var.name}_${var.project}_${var.environment}"
     Environment = "${var.environment}"
     Project     = "${var.project}"
   }
