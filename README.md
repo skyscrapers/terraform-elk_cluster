@@ -26,6 +26,7 @@ Terraform module to setup all resources needed for an Elasticsearch cluster.
 *   \[`db_vl_size`\]: Number(optional, default 100): Size in GB of the Elasticsearch data EBS volume.
 *   \[`db_vl_name`\]: String(optional, default "/dev/xvdg"): Volume device name of the Elasticsearch data EBS volume.
 *   \[`elb_internal`\]: Bool(optional, default true): Whether the ELB should be internal only (not-public).
+*   \[`snapshot_s3_bucket_arn`\]: String(optional, default ""): The S3 bucket ARN where the ES snapshots will be stored, this is just to give the proper permissions to the EC2 instance profiles.
 
 ## Output
 

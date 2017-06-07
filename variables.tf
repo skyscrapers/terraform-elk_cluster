@@ -90,3 +90,8 @@ variable "sg_all_id" {
 variable "vpc_id" {
   type = "string"
 }
+
+variable "snapshot_s3_bucket_arn" {
+  type    = "string"
+  default = ""
+}
