@@ -1,4 +1,4 @@
-# terraform-rlk_cluster
+# terraform-elk_cluster
 
 Terraform module to setup all resources needed for an Elasticsearch cluster.
 
