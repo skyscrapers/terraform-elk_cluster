@@ -35,6 +35,10 @@ resource "aws_volume_attachment" "elk_ebs_attach" {
   instance_id = "${module.elk_instances.instance_ids[count.index]}"
 }
 
+variable "elb_listener_keys" {
+  default = ["instance_port", "instance_protocol", "lb_port", "lb_protocol"]
+}
+
 resource "aws_elb" "elk_elb" {
   name                      = "${var.name}-${var.project}-${var.environment}"
   cross_zone_load_balancing = true
@@ -43,20 +47,17 @@ resource "aws_elb" "elk_elb" {
   internal                  = "${var.elb_internal}"
   subnets                   = ["${var.subnet_ids}"]
 
-  listener = [
-    {
-      instance_port     = "${var.elasticsearch_port}"
-      instance_protocol = "http"
-      lb_port           = "${var.elasticsearch_port}"
-      lb_protocol       = "http"
-    },
-    {
-      instance_port     = "${var.elasticsearch_java_port}"
-      instance_protocol = "tcp"
-      lb_port           = "${var.elasticsearch_java_port}"
-      lb_protocol       = "tcp"
-    },
-  ]
+  # This ugly-and-unreadable piece of code is to dynamically add listeners to the ELB depending on enabled features (var.logstash_enabled and var.kibana_enabled)
+  # There will always be two fix listeners (the first two)
+  # and depending on var.logstash_enabled and var.kibana_enabled, the corresponding listeners for logstash and kibana will be added or not
+  listener = "${concat(
+    list(
+      zipmap("${var.elb_listener_keys}", list("${var.elasticsearch_port}", "http", "${var.elasticsearch_port}", "http")),
+      zipmap("${var.elb_listener_keys}", list("${var.elasticsearch_java_port}", "tcp", "${var.elasticsearch_java_port}", "tcp"))
+    ),
+    slice(list(zipmap("${var.elb_listener_keys}", list("${var.logstash_port}", "http", "${var.logstash_port}", "http"))), 0, var.logstash_enabled ? 1 : 0),
+    slice(list(zipmap("${var.elb_listener_keys}", list("${var.kibana_port}", "http", "${var.kibana_port}", "http"))), 0, var.kibana_enabled ? 1 : 0),
+  )}"
 
   health_check {
     healthy_threshold   = 2
