@@ -23,8 +23,10 @@ Terraform module to setup all resources needed for an Elasticsearch cluster.
 *   \[`instance_type`\]: String(optional, default "t2.small"): The instance type to launch for the Elasticsearch nodes.
 *   \[`termination_protection`\]: Bool(optional, default true): Whether to enable termination protection on the Elasticsearch nodes.
 *   \[`db_vl_type`\]: String(optional, default "gp2"): Type of the Elasticsearch data EBS volume.
+*   \[`db_vl_iops`\]: String(optional, default ""): The amount of provisioned IOPS. This is only valid for db_vl_type of "io1", and must be specified if using that type
 *   \[`db_vl_size`\]: Number(optional, default 100): Size in GB of the Elasticsearch data EBS volume.
 *   \[`db_vl_name`\]: String(optional, default "/dev/xvdg"): Volume device name of the Elasticsearch data EBS volume.
+*   \[`db_vl_encrypted`\]: String(optional, default "false"): Enables EBS encryption on the volume.
 *   \[`elb_internal`\]: Bool(optional, default true): Whether the ELB should be internal only (not-public).
 *   \[`snapshot_s3_bucket_arn`\]: String(optional, default ""): The S3 bucket ARN where the ES snapshots will be stored, this is just to give the proper permissions to the EC2 instance profiles.
 *   \[`es_data_dir`\]: String(optional, default "/usr/share/elasticsearch/data/"): The directory where to mount the external volume, so this will be the directory where Elasticsearch will store the data.

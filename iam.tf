@@ -7,7 +7,8 @@ resource "aws_iam_policy" "elk_instances_policy" {
   "Statement": [
     {
       "Action": [
-        "ec2:DescribeInstances"
+        "ec2:DescribeInstances",
+        "ec2:DescribeVolume*"
       ],
       "Effect": "Allow",
       "Resource": "*"

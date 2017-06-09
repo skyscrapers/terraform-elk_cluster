@@ -65,6 +65,15 @@ variable "db_vl_type" {
   default = "gp2"
 }
 
+variable "db_vl_iops" {
+  default = 0
+}
+
+variable "db_vl_encrypted" {
+  type = "string"
+  default = "false"
+}
+
 variable "db_vl_size" {
   default = 100
 }
@@ -72,6 +81,11 @@ variable "db_vl_size" {
 variable "db_vl_name" {
   type    = "string"
   default = "/dev/xvdg"
+}
+
+variable "db_vl_delete_on_termination" {
+  type    = "string"
+  default = "true"
 }
 
 variable "elb_internal" {
