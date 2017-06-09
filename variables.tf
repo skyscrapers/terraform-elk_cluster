@@ -95,3 +95,8 @@ variable "snapshot_s3_bucket_arn" {
   type    = "string"
   default = ""
 }
+
+variable "es_data_dir" {
+  type    = "string"
+  default = "/usr/share/elasticsearch/data/"
+}

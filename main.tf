@@ -9,8 +9,8 @@ module "elk_instances" {
   ami                    = "${var.ami}"
   instance_type          = "${var.instance_type}"
   subnets                = "${var.subnet_ids}"
-  sgs                    = [ "${aws_security_group.elk_sg.id}", "${var.sg_all_id}" ]
-  user_data              = [ "${module.elk_userdata.user_datas}" ]
+  sgs                    = ["${aws_security_group.elk_sg.id}", "${var.sg_all_id}"]
+  user_data              = "${data.template_cloudinit_config.instances_userdata.*.rendered}"
 }
 
 module "elk_userdata" {
@@ -19,6 +19,40 @@ module "elk_userdata" {
   customer            = "${var.project}"
   environment         = "${var.environment}"
   function            = "${var.name}"
+}
+
+data "template_cloudinit_config" "instances_userdata" {
+  count         = "${var.cluster_size}"
+  gzip          = true
+  base64_encode = true
+
+  # Format external volume as ext4
+  part {
+    content_type = "text/cloud-config"
+
+    content = <<EOF
+fs_setup:
+  - label: es_data
+    filesystem: 'ext4'
+    device: '${var.db_vl_name}'
+EOF
+  }
+
+  # Mount external volume
+  part {
+    content_type = "text/cloud-config"
+
+    content = <<EOF
+mounts:
+  - [ ${var.db_vl_name}, ${var.es_data_dir}, ext4, "defaults", "0", "2" ]
+EOF
+  }
+
+  # Bootstrap puppet
+  part {
+    content_type = "text/x-shellscript"
+    content      = "${module.elk_userdata.user_datas[count.index]}"
+  }
 }
 
 resource "aws_ebs_volume" "elk_volume" {
