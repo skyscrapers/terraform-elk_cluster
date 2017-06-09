@@ -10,7 +10,7 @@ module "elk_instances" {
   instance_type          = "${var.instance_type}"
   subnets                = "${var.subnet_ids}"
   sgs                    = ["${aws_security_group.elk_sg.id}", "${var.sg_all_id}"]
-  user_data              = ["${data.template_cloudinit_config.instances_userdata.rendered}"]
+  user_data              = "${data.template_cloudinit_config.instances_userdata.*.rendered}"
 }
 
 module "elk_userdata" {
