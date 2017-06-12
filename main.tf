@@ -1,5 +1,5 @@
 module "elk_instances" {
-  source                 = "github.com/skyscrapers/terraform-instances//instance?ref=ae146adae8b5911aadc0d9f9a0b8bcf481df8a39"
+  source                 = "github.com/skyscrapers/terraform-instances//instance?ref=1.1.0"
   project                = "${var.project}"
   environment            = "${var.environment}"
   name                   = "${var.name}"
@@ -11,6 +11,11 @@ module "elk_instances" {
   subnets                = "${var.subnet_ids}"
   sgs                    = ["${aws_security_group.elk_sg.id}", "${var.sg_all_id}"]
   user_data              = "${data.template_cloudinit_config.instances_userdata.*.rendered}"
+  ebs_block_devices      = ["${zipmap("${var.ebs_block_device_properties}", list("${var.db_vl_name}", "${var.db_vl_type}", "${var.db_vl_size}", "${var.db_vl_iops}", "${var.db_vl_delete_on_termination}", "${var.db_vl_encrypted}"))}"]
+}
+
+variable "ebs_block_device_properties" {
+  default = ["device_name", "volume_type", "volume_size", "iops", "delete_on_termination", "encrypted"]
 }
 
 module "elk_userdata" {
@@ -26,25 +31,30 @@ data "template_cloudinit_config" "instances_userdata" {
   gzip          = true
   base64_encode = true
 
-  # Format external volume as ext4
+  part {
+    content_type = "text/cloud-config"
+    content      = "package_update: true"
+  }
+
   part {
     content_type = "text/cloud-config"
 
     content = <<EOF
-fs_setup:
-  - label: es_data
-    filesystem: 'ext4'
-    device: '${var.db_vl_name}'
+packages:
+  - awscli
 EOF
   }
 
-  # Mount external volume
+  # Wait for the EBS volume to become ready
+  # And format and mount the drive
   part {
-    content_type = "text/cloud-config"
-
-    content = <<EOF
-mounts:
-  - [ ${var.db_vl_name}, ${var.es_data_dir}, ext4, "defaults", "0", "2" ]
+    content_type = "text/x-shellscript"
+    content      = <<EOF
+#!/bin/bash
+aws --region $(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone | sed 's/[a-z]$//') ec2 wait volume-in-use --filters Name=attachment.instance-id,Values=$(curl -s http://169.254.169.254/latest/meta-data/instance-id) Name=attachment.device,Values=${var.db_vl_name}
+mkfs.ext4 ${var.db_vl_name}
+mkdir -p ${var.es_data_dir}
+mount ${var.db_vl_name} ${var.es_data_dir}
 EOF
   }
 
@@ -53,20 +63,6 @@ EOF
     content_type = "text/x-shellscript"
     content      = "${module.elk_userdata.user_datas[count.index]}"
   }
-}
-
-resource "aws_ebs_volume" "elk_volume" {
-  count             = "${var.cluster_size}"
-  availability_zone = "${module.elk_instances.instance_azs[count.index]}"
-  size              = "${var.db_vl_size}"
-  type              = "${var.db_vl_type}"
-}
-
-resource "aws_volume_attachment" "elk_ebs_attach" {
-  count       = "${var.cluster_size}"
-  device_name = "${var.db_vl_name}"
-  volume_id   = "${element(aws_ebs_volume.elk_volume.*.id, count.index)}"
-  instance_id = "${module.elk_instances.instance_ids[count.index]}"
 }
 
 variable "elb_listener_keys" {
