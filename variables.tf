@@ -115,9 +115,21 @@ variable "elb_internal" {
   description = "Whether the ELB should be internal only (not-public)."
 }
 
-variable "elb_ingress_sgs" {
+variable "elb_es_ingress_sgs" {
   type        = "list"
-  description = "List of Security Groups which need access to the cluster."
+  description = "List of Security Groups which need access to the Elasticsearch port of the cluster."
+}
+
+variable "elb_kibana_ingress_sgs" {
+  type        = "list"
+  default     = []
+  description = "List of Security Groups which need access to the Kibana port of the cluster."
+}
+
+variable "elb_logstash_ingress_sgs" {
+  type        = "list"
+  default     = []
+  description = "List of Security Groups which need access to the Logstash port of the cluster."
 }
 
 variable "sg_all_id" {

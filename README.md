@@ -6,7 +6,7 @@ Terraform module to setup all resources needed for an Elasticsearch cluster.
 
 *   \[`project`\]: String(required): The name of the project.
 *   \[`environment`\]: String(required): The name of the environment (production, staging , development).
-*   \[`elb_ingress_sgs`\]: List(required): List of Security Groups which need access to the cluster.
+*   \[`elb_es_ingress_sgs`\]: List(required): List of Security Groups which need access to the Elasticsearch port of the cluster.
 *   \[`vpc_id`\]: String(required): VPC ID where the proxies will be deployed.
 *   \[`subnet_ids`\]: List(required): Subnet IDs where the cluster will be deployed.
 *   \[`sg_all_id`\]: String(required): ID of the base security group.
@@ -20,6 +20,8 @@ Terraform module to setup all resources needed for an Elasticsearch cluster.
 *   \[`elasticsearch_java_port`\]: Number(optional, default 9300): Elasticsearch JAVA API port.
 *   \[`logstash_port`\]: Number(optional, default 9600): Logstash port.
 *   \[`kibana_port`\]: Number(optional, default 5601): Kibana port.
+*   \[`elb_kibana_ingress_sgs`\]: List(optional): List of Security Groups which need access to the Kibana port of the cluster.
+*   \[`elb_logstash_ingress_sgs`\]: List(optional): List of Security Groups which need access to the Logstash port of the cluster.
 *   \[`instance_type`\]: String(optional, default "t2.small"): The instance type to launch for the Elasticsearch nodes.
 *   \[`termination_protection`\]: Bool(optional, default true): Whether to enable termination protection on the Elasticsearch nodes.
 *   \[`db_vl_type`\]: String(optional, default "gp2"): Type of the Elasticsearch data EBS volume.
@@ -44,18 +46,18 @@ Terraform module to setup all resources needed for an Elasticsearch cluster.
 
 ```terraform
 module "elk_cluster" {
-  source           = "github.com/skyscrapers/terraform-elk_cluster?ref=1.0.0"
-  project          = "${var.project}"
-  environment      = "${var.environment}"
-  cluster_size     = 3
-  logstash_enabled = true
-  kibana_enabled   = true
-  ami              = "ami-6c101b0a"
-  instance_type    = "t2.small"
-  key_name         = "mykey"
-  vpc_id           = "${module.vpc.vpc_id}"
-  subnet_ids       = "${module.vpc.private_db_subnets}"
-  sg_all_id        = "${module.general_security_groups.sg_all_id}"
-  elb_ingress_sgs  = ["${module.app.sg_id}"]
+  source              = "github.com/skyscrapers/terraform-elk_cluster?ref=1.0.0"
+  project             = "${var.project}"
+  environment         = "${var.environment}"
+  cluster_size        = 3
+  logstash_enabled    = true
+  kibana_enabled      = true
+  ami                 = "ami-6c101b0a"
+  instance_type       = "t2.small"
+  key_name            = "mykey"
+  vpc_id              = "${module.vpc.vpc_id}"
+  subnet_ids          = "${module.vpc.private_db_subnets}"
+  sg_all_id           = "${module.general_security_groups.sg_all_id}"
+  elb_es_ingress_sgs  = ["${module.app.sg_id}"]
 }
 ```
