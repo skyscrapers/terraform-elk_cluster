@@ -49,7 +49,8 @@ EOF
   # And format and mount the drive
   part {
     content_type = "text/x-shellscript"
-    content      = <<EOF
+
+    content = <<EOF
 #!/bin/bash
 aws --region $(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone | sed 's/[a-z]$//') ec2 wait volume-in-use --filters Name=attachment.instance-id,Values=$(curl -s http://169.254.169.254/latest/meta-data/instance-id) Name=attachment.device,Values=${var.db_vl_name}
 mkfs.ext4 ${var.db_vl_name}

@@ -1,7 +1,8 @@
 resource "aws_iam_policy" "elk_instances_policy" {
   name        = "elk_instances_policy_${var.name}_${var.project}_${var.environment}"
   description = "Policy for the ELK instances of ${var.name} ${var.project} ${var.environment}"
-  policy      = <<EOF
+
+  policy = <<EOF
 {
   "Version": "2012-10-17",
   "Statement": [
