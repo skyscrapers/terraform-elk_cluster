@@ -77,7 +77,7 @@ resource "aws_elb" "elk_elb" {
   security_groups           = ["${aws_security_group.elk_elb_sg.id}"]
   internal                  = "${var.elb_internal}"
   subnets                   = ["${var.subnet_ids}"]
-  instances = ["${module.elk_instances.instance_ids}"]
+  instances                 = ["${module.elk_instances.instance_ids}"]
 
   # This ugly-and-unreadable piece of code is to dynamically add listeners to the ELB depending on enabled features (var.logstash_enabled and var.kibana_enabled)
   # There will always be two fix listeners (the first two)
