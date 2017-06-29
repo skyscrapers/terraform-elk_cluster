@@ -1,7 +1,7 @@
 resource "aws_security_group" "elk_sg" {
+  count       = "${var.cluster_size == "0" ? 0 : 1}"
   name        = "sg_${var.name}_${var.project}_${var.environment}"
   description = "Security group that is needed for the ELK cluster"
-  count       = "${var.cluster_size == "0" ? 0 : 1}"
   vpc_id      = "${var.vpc_id}"
 
   tags {
@@ -12,9 +12,9 @@ resource "aws_security_group" "elk_sg" {
 }
 
 resource "aws_security_group" "elk_elb_sg" {
+  count       = "${var.cluster_size == "0" ? 0 : 1}"
   name        = "sg_elb_${var.name}_${var.project}_${var.environment}"
   description = "Security group that is needed for the ELK cluster ELB"
-  count       = "${var.cluster_size == "0" ? 0 : 1}"
   vpc_id      = "${var.vpc_id}"
 
   tags {

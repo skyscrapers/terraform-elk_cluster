@@ -71,8 +71,8 @@ variable "elb_listener_keys" {
 }
 
 resource "aws_elb" "elk_elb" {
-  name                      = "${var.name}-${var.project}-${var.environment}"
   count                     = "${var.cluster_size == "0" ? 0 : var.cluster_size}"
+  name                      = "${var.name}-${var.project}-${var.environment}"
   cross_zone_load_balancing = true
   connection_draining       = false
   security_groups           = ["${aws_security_group.elk_elb_sg.id}"]

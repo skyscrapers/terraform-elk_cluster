@@ -1,7 +1,7 @@
 resource "aws_iam_policy" "elk_instances_policy" {
+  count       = "${var.cluster_size == "0" ? 0 : 1}"
   name        = "elk_instances_policy_${var.name}_${var.project}_${var.environment}"
   description = "Policy for the ELK instances of ${var.name} ${var.project} ${var.environment}"
-  count       = "${var.cluster_size == "0" ? 0 : 1}"
   policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -48,7 +48,7 @@ EOF
 }
 
 resource "aws_iam_role_policy_attachment" "elk_instances_policy_attachment" {
+  count      = "${var.cluster_size == "0" ? 0 : 1}"
   role       = "${module.elk_instances.role_id}"
   policy_arn = "${aws_iam_policy.elk_instances_policy.arn}"
-  count      = "${var.cluster_size == "0" ? 0 : 1}"
 }
