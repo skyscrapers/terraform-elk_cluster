@@ -1,5 +1,5 @@
 module "elk_instances" {
-  source                 = "github.com/skyscrapers/terraform-instances//instance?ref=noCreateZero"
+  source                 = "github.com/skyscrapers/terraform-instances//instance?ref=21a85a47f7079bd0bb1aec94be454ef08f80608f"
   project                = "${var.project}"
   environment            = "${var.environment}"
   name                   = "${var.name}"
