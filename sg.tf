@@ -89,7 +89,7 @@ resource "aws_security_group_rule" "instance_ingress_kibana_from_elb" {
 ## ELB
 
 resource "aws_security_group_rule" "elb_ingress_es_from_outside" {
-  count                    = "${length(var.elb_es_ingress_sgs)}"
+  count                    = "${var.cluster_size == "0" ? 0 : length(var.elb_es_ingress_sgs)}"
   type                     = "ingress"
   protocol                 = "tcp"
   from_port                = "${var.elasticsearch_port}"
@@ -109,7 +109,7 @@ resource "aws_security_group_rule" "elb_egress_es_to_instance" {
 }
 
 resource "aws_security_group_rule" "elb_ingress_es-java_from_outside" {
-  count                    = "${length(var.elb_es_ingress_sgs)}"
+  count                    = "${var.cluster_size == "0" ? 0 : length(var.elb_es_ingress_sgs)}"
   type                     = "ingress"
   protocol                 = "tcp"
   from_port                = "${var.elasticsearch_java_port}"
