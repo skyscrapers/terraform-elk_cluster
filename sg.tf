@@ -1,4 +1,5 @@
 resource "aws_security_group" "elk_sg" {
+  count       = "${var.cluster_size == "0" ? 0 : 1}"
   name        = "sg_${var.name}_${var.project}_${var.environment}"
   description = "Security group that is needed for the ELK cluster"
   vpc_id      = "${var.vpc_id}"
@@ -11,6 +12,7 @@ resource "aws_security_group" "elk_sg" {
 }
 
 resource "aws_security_group" "elk_elb_sg" {
+  count       = "${var.cluster_size == "0" ? 0 : 1}"
   name        = "sg_elb_${var.name}_${var.project}_${var.environment}"
   description = "Security group that is needed for the ELK cluster ELB"
   vpc_id      = "${var.vpc_id}"
@@ -25,6 +27,7 @@ resource "aws_security_group" "elk_elb_sg" {
 ## INSTANCES
 
 resource "aws_security_group_rule" "instance_ingress_cluster" {
+  count             = "${var.cluster_size == "0" ? 0 : 1}"
   type              = "ingress"
   from_port         = "${var.elasticsearch_java_port}"
   to_port           = "${var.elasticsearch_java_port}"
@@ -34,6 +37,7 @@ resource "aws_security_group_rule" "instance_ingress_cluster" {
 }
 
 resource "aws_security_group_rule" "instance_egress_cluster" {
+  count             = "${var.cluster_size == "0" ? 0 : 1}"
   type              = "egress"
   from_port         = "${var.elasticsearch_java_port}"
   to_port           = "${var.elasticsearch_java_port}"
@@ -43,6 +47,7 @@ resource "aws_security_group_rule" "instance_egress_cluster" {
 }
 
 resource "aws_security_group_rule" "instance_ingress_es_from_elb" {
+  count                   = "${var.cluster_size == "0" ? 0 : 1}"
   type                     = "ingress"
   protocol                 = "tcp"
   from_port                = "${var.elasticsearch_port}"
@@ -52,6 +57,7 @@ resource "aws_security_group_rule" "instance_ingress_es_from_elb" {
 }
 
 resource "aws_security_group_rule" "instance_ingress_es_java_from_elb" {
+  count                    = "${var.cluster_size == "0" ? 0 : 1}"
   type                     = "ingress"
   protocol                 = "tcp"
   from_port                = "${var.elasticsearch_java_port}"
@@ -83,7 +89,7 @@ resource "aws_security_group_rule" "instance_ingress_kibana_from_elb" {
 ## ELB
 
 resource "aws_security_group_rule" "elb_ingress_es_from_outside" {
-  count                    = "${length(var.elb_es_ingress_sgs)}"
+  count                    = "${var.cluster_size == "0" ? 0 : length(var.elb_es_ingress_sgs)}"
   type                     = "ingress"
   protocol                 = "tcp"
   from_port                = "${var.elasticsearch_port}"
@@ -93,6 +99,7 @@ resource "aws_security_group_rule" "elb_ingress_es_from_outside" {
 }
 
 resource "aws_security_group_rule" "elb_egress_es_to_instance" {
+  count                    = "${var.cluster_size == "0" ? 0 : 1}"
   type                     = "egress"
   protocol                 = "tcp"
   from_port                = "${var.elasticsearch_port}"
@@ -102,7 +109,7 @@ resource "aws_security_group_rule" "elb_egress_es_to_instance" {
 }
 
 resource "aws_security_group_rule" "elb_ingress_es-java_from_outside" {
-  count                    = "${length(var.elb_es_ingress_sgs)}"
+  count                    = "${var.cluster_size == "0" ? 0 : length(var.elb_es_ingress_sgs)}"
   type                     = "ingress"
   protocol                 = "tcp"
   from_port                = "${var.elasticsearch_java_port}"
@@ -112,6 +119,7 @@ resource "aws_security_group_rule" "elb_ingress_es-java_from_outside" {
 }
 
 resource "aws_security_group_rule" "elb_egress_es-java_to_instance" {
+  count                    = "${var.cluster_size == "0" ? 0 : 1}"
   type                     = "egress"
   protocol                 = "tcp"
   from_port                = "${var.elasticsearch_java_port}"

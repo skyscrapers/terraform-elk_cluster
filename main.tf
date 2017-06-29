@@ -1,5 +1,5 @@
 module "elk_instances" {
-  source                 = "github.com/skyscrapers/terraform-instances//instance?ref=1.1.0"
+  source                 = "github.com/skyscrapers/terraform-instances//instance?ref=21a85a47f7079bd0bb1aec94be454ef08f80608f"
   project                = "${var.project}"
   environment            = "${var.environment}"
   name                   = "${var.name}"
@@ -71,6 +71,7 @@ variable "elb_listener_keys" {
 }
 
 resource "aws_elb" "elk_elb" {
+  count                     = "${var.cluster_size == "0" ? 0 : var.cluster_size}"
   name                      = "${var.name}-${var.project}-${var.environment}"
   cross_zone_load_balancing = true
   connection_draining       = false
