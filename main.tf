@@ -21,7 +21,7 @@ variable "ebs_block_device_properties" {
 module "elk_userdata" {
   source              = "github.com/skyscrapers/terraform-skyscrapers//puppet-userdata?ref=1.0.1"
   amount_of_instances = "${var.cluster_size}"
-  customer            = "${var.project}"
+  customer            = "${var.customer == "" ? "" : "${var.customer}-"}${var.project}"
   environment         = "${var.environment}"
   function            = "${var.name}"
 }
