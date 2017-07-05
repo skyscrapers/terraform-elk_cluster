@@ -153,3 +153,7 @@ variable "es_data_dir" {
   default     = "/usr/share/elasticsearch/data/"
   description = "The directory where to mount the external volume, so this will be the directory where Elasticsearch will store the data."
 }
+variable "customer" {
+  description = "The name of the customer"
+  default = ""
+}

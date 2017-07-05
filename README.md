@@ -5,6 +5,7 @@ Terraform module to setup all resources needed for an Elasticsearch cluster.
 ## Available variables
 
 *   \[`project`\]: String(required): The name of the project.
+*   \[`customer`\]: String(optional): The name of the customer. 
 *   \[`environment`\]: String(required): The name of the environment (production, staging , development).
 *   \[`elb_es_ingress_sgs`\]: List(required): List of Security Groups which need access to the Elasticsearch port of the cluster.
 *   \[`vpc_id`\]: String(required): VPC ID where the proxies will be deployed.
