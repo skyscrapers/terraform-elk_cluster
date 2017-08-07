@@ -1,5 +1,5 @@
 module "elk_instances" {
-  source                 = "github.com/skyscrapers/terraform-instances//instance?ref=1.1.1"
+  source                 = "github.com/skyscrapers/terraform-instances//instance?ref=1.2.2"
   project                = "${var.project}"
   environment            = "${var.environment}"
   name                   = "${var.name}"
@@ -56,6 +56,16 @@ aws --region $(curl -s http://169.254.169.254/latest/meta-data/placement/availab
 mkfs.ext4 ${var.db_vl_name}
 mkdir -p ${var.es_data_dir}
 mount ${var.db_vl_name} ${var.es_data_dir}
+EOF
+  }
+
+  # Make an fstab entry for the mount
+  part {
+    content_type = "text/cloud-config"
+
+    content = <<EOF
+mounts:
+  - [ ${var.db_vl_name}, ${var.es_data_dir}, ext4, "defaults", "0", "2" ]
 EOF
   }
 
