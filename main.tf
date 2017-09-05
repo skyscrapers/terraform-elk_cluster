@@ -4,6 +4,7 @@ module "elk_instances" {
   environment            = "${var.environment}"
   name                   = "${var.name}"
   instance_count         = "${var.cluster_size}"
+  ebs_optimized          = "${var.ebs_optimized}"
   termination_protection = "${var.termination_protection}"
   key_name               = "${var.key_name}"
   ami                    = "${var.ami}"
