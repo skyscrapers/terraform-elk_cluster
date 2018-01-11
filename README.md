@@ -35,6 +35,7 @@ Terraform module to setup all resources needed for an Elasticsearch cluster.
 * \[`elb_internal`\]: Bool(optional, default true): Whether the ELB should be internal only (not-public).
 * \[`snapshot_s3_bucket_arn`\]: String(optional, default ""): The S3 bucket ARN where the ES snapshots will be stored, this is just to give the proper permissions to the EC2 instance profiles.
 * \[`es_data_dir`\]: String(optional, default "/usr/share/elasticsearch/data/"): The directory where to mount the external volume, so this will be the directory where Elasticsearch will store the data.
+* \[`cloudwatch_logs`\]: Boolean(optional, default false): Sets cloudwatch logs permissions to the elk instances role if enabled.
 
 ## Output
 

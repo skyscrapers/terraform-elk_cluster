@@ -1,10 +1,9 @@
 module "elk_instances" {
-  source                 = "github.com/skyscrapers/terraform-instances//instance?ref=1.2.2"
+  source                 = "github.com/skyscrapers/terraform-instances//instance?ref=2.0.14"
   project                = "${var.project}"
   environment            = "${var.environment}"
   name                   = "${var.name}"
   instance_count         = "${var.cluster_size}"
-  ebs_optimized          = "${var.ebs_optimized}"
   termination_protection = "${var.termination_protection}"
   key_name               = "${var.key_name}"
   ami                    = "${var.ami}"
@@ -86,7 +85,7 @@ resource "aws_elb" "elk_elb" {
   name                      = "${var.name}-${var.project}-${var.environment}"
   cross_zone_load_balancing = true
   connection_draining       = false
-  security_groups           = ["${aws_security_group.elk_elb_sg.id}"]
+  security_groups           = ["${aws_security_group.elk_elb_sg.*.id}"]
   internal                  = "${var.elb_internal}"
   subnets                   = ["${var.subnet_ids}"]
   instances                 = ["${module.elk_instances.instance_ids}"]

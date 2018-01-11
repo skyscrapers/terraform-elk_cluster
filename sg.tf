@@ -52,7 +52,7 @@ resource "aws_security_group_rule" "instance_ingress_es_from_elb" {
   from_port                = "${var.elasticsearch_port}"
   to_port                  = "${var.elasticsearch_port}"
   security_group_id        = "${aws_security_group.elk_sg.id}"
-  source_security_group_id = "${aws_security_group.elk_elb_sg.id}"
+  source_security_group_id = "${aws_security_group.elk_elb_sg.0.id}"
 }
 
 resource "aws_security_group_rule" "instance_ingress_es_java_from_elb" {
@@ -62,7 +62,7 @@ resource "aws_security_group_rule" "instance_ingress_es_java_from_elb" {
   from_port                = "${var.elasticsearch_java_port}"
   to_port                  = "${var.elasticsearch_java_port}"
   security_group_id        = "${aws_security_group.elk_sg.id}"
-  source_security_group_id = "${aws_security_group.elk_elb_sg.id}"
+  source_security_group_id = "${aws_security_group.elk_elb_sg.0.id}"
 }
 
 resource "aws_security_group_rule" "instance_ingress_logstash_from_elb" {
@@ -72,7 +72,7 @@ resource "aws_security_group_rule" "instance_ingress_logstash_from_elb" {
   from_port                = "${var.logstash_port}"
   to_port                  = "${var.logstash_port}"
   security_group_id        = "${aws_security_group.elk_sg.id}"
-  source_security_group_id = "${aws_security_group.elk_elb_sg.id}"
+  source_security_group_id = "${aws_security_group.elk_elb_sg.0.id}"
 }
 
 resource "aws_security_group_rule" "instance_ingress_kibana_from_elb" {
@@ -82,7 +82,7 @@ resource "aws_security_group_rule" "instance_ingress_kibana_from_elb" {
   from_port                = "${var.kibana_port}"
   to_port                  = "${var.kibana_port}"
   security_group_id        = "${aws_security_group.elk_sg.id}"
-  source_security_group_id = "${aws_security_group.elk_elb_sg.id}"
+  source_security_group_id = "${aws_security_group.elk_elb_sg.0.id}"
 }
 
 ## ELB
@@ -93,7 +93,7 @@ resource "aws_security_group_rule" "elb_ingress_es_from_outside" {
   protocol                 = "tcp"
   from_port                = "${var.elasticsearch_port}"
   to_port                  = "${var.elasticsearch_port}"
-  security_group_id        = "${aws_security_group.elk_elb_sg.id}"
+  security_group_id        = "${aws_security_group.elk_elb_sg.0.id}"
   source_security_group_id = "${element(var.elb_es_ingress_sgs, count.index)}"
 }
 
@@ -103,7 +103,7 @@ resource "aws_security_group_rule" "elb_egress_es_to_instance" {
   protocol                 = "tcp"
   from_port                = "${var.elasticsearch_port}"
   to_port                  = "${var.elasticsearch_port}"
-  security_group_id        = "${aws_security_group.elk_elb_sg.id}"
+  security_group_id        = "${aws_security_group.elk_elb_sg.0.id}"
   source_security_group_id = "${aws_security_group.elk_sg.id}"
 }
 
@@ -113,7 +113,7 @@ resource "aws_security_group_rule" "elb_ingress_es-java_from_outside" {
   protocol                 = "tcp"
   from_port                = "${var.elasticsearch_java_port}"
   to_port                  = "${var.elasticsearch_java_port}"
-  security_group_id        = "${aws_security_group.elk_elb_sg.id}"
+  security_group_id        = "${aws_security_group.elk_elb_sg.0.id}"
   source_security_group_id = "${element(var.elb_es_ingress_sgs, count.index)}"
 }
 
@@ -123,7 +123,7 @@ resource "aws_security_group_rule" "elb_egress_es-java_to_instance" {
   protocol                 = "tcp"
   from_port                = "${var.elasticsearch_java_port}"
   to_port                  = "${var.elasticsearch_java_port}"
-  security_group_id        = "${aws_security_group.elk_elb_sg.id}"
+  security_group_id        = "${aws_security_group.elk_elb_sg.0.id}"
   source_security_group_id = "${aws_security_group.elk_sg.id}"
 }
 
@@ -133,7 +133,7 @@ resource "aws_security_group_rule" "elb_ingress_logstash_from_outside" {
   protocol                 = "tcp"
   from_port                = "${var.logstash_port}"
   to_port                  = "${var.logstash_port}"
-  security_group_id        = "${aws_security_group.elk_elb_sg.id}"
+  security_group_id        = "${aws_security_group.elk_elb_sg.0.id}"
   source_security_group_id = "${element(var.elb_logstash_ingress_sgs, count.index)}"
 }
 
@@ -143,7 +143,7 @@ resource "aws_security_group_rule" "elb_egress_logstash_to_instance" {
   protocol                 = "tcp"
   from_port                = "${var.logstash_port}"
   to_port                  = "${var.logstash_port}"
-  security_group_id        = "${aws_security_group.elk_elb_sg.id}"
+  security_group_id        = "${aws_security_group.elk_elb_sg.0.id}"
   source_security_group_id = "${aws_security_group.elk_sg.id}"
 }
 
@@ -153,7 +153,7 @@ resource "aws_security_group_rule" "elb_ingress_kibana_from_outside" {
   protocol                 = "tcp"
   from_port                = "${var.kibana_port}"
   to_port                  = "${var.kibana_port}"
-  security_group_id        = "${aws_security_group.elk_elb_sg.id}"
+  security_group_id        = "${aws_security_group.elk_elb_sg.0.id}"
   source_security_group_id = "${element(var.elb_kibana_ingress_sgs, count.index)}"
 }
 
@@ -163,6 +163,6 @@ resource "aws_security_group_rule" "elb_egress_kibana_to_instance" {
   protocol                 = "tcp"
   from_port                = "${var.kibana_port}"
   to_port                  = "${var.kibana_port}"
-  security_group_id        = "${aws_security_group.elk_elb_sg.id}"
+  security_group_id        = "${aws_security_group.elk_elb_sg.0.id}"
   source_security_group_id = "${aws_security_group.elk_sg.id}"
 }
