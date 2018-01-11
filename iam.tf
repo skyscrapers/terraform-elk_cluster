@@ -52,3 +52,29 @@ resource "aws_iam_role_policy_attachment" "elk_instances_policy_attachment" {
   role       = "${module.elk_instances.role_id}"
   policy_arn = "${aws_iam_policy.elk_instances_policy.arn}"
 }
+
+resource "aws_iam_policy" "cloudwatch_policy" {
+  count       = "${var.cloudwatch_logs ? 1 : 0}"
+  name        = "elk_instances_policy_${var.name}_${var.project}_${var.environment}"
+  policy      = "${data.aws_iam_policy_document.cloudwatch_logs_push.json}"
+}
+
+data "aws_iam_policy_document" "cloudwatch_logs_push" {
+  statement {
+      effect = "Allow"
+      actions = [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents",
+        "logs:DescribeLogGroups",
+        "logs:DescribeLogStreams"
+      ],
+      resources = ["*"]
+    }
+}
+
+resource "aws_iam_role_policy_attachment" "cloudwatch_policy" {
+  count       = "${var.cloudwatch_logs ? 1 : 0}"
+  role       = "${module.elk_instances.role_id}"
+  policy_arn = "${aws_iam_policy.cloudwatch_policy.arn}"
+}

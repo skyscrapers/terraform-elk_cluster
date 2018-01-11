@@ -60,11 +60,6 @@ variable "instance_type" {
   description = "The instance type to launch for the Elasticsearch nodes."
 }
 
-variable "ebs_optimized" {
-  description = "Whether to enable EBS optimization. You need to set this according the used instance type."
-  default     = false
-}
-
 variable "key_name" {
   type        = "string"
   description = "ID of the SSH key to use for the Elasticsearch nodes."
@@ -161,4 +156,9 @@ variable "es_data_dir" {
 variable "customer" {
   description = "The name of the customer"
   default = ""
+}
+
+variable "cloudwatch_logs" {
+  description = "Sets cloudwatch logs permissions to the elk instances role if enabled"
+  default = false
 }
