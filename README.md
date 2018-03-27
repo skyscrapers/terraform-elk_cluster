@@ -6,7 +6,7 @@ Terraform module to setup all resources needed for an Elasticsearch cluster.
 
 * \[`project`\]: String(required): The name of the project.
 * \[`customer`\]: String(optional): The name of the customer. 
-* \[`environment`\]: String(required): The name of the environment (production, staging , development).
+* \[`environment`\]: String(required): The name of the environment (production, staging, development).
 * \[`elb_es_ingress_sgs`\]: List(required): List of Security Groups which need access to the Elasticsearch port of the cluster.
 * \[`vpc_id`\]: String(required): VPC ID where the proxies will be deployed.
 * \[`subnet_ids`\]: List(required): Subnet IDs where the cluster will be deployed.
@@ -24,7 +24,6 @@ Terraform module to setup all resources needed for an Elasticsearch cluster.
 * \[`elb_kibana_ingress_sgs`\]: List(optional): List of Security Groups which need access to the Kibana port of the cluster.
 * \[`elb_logstash_ingress_sgs`\]: List(optional): List of Security Groups which need access to the Logstash port of the cluster.
 * \[`instance_type`\]: String(optional, default "t2.small"): The instance type to launch for the Elasticsearch nodes.
-* \[`ebs_optimized`\]: Bool(optional, default `false`) Whether to enable EBS optimization. You need to set this according the used instance type.
 * \[`termination_protection`\]: Bool(optional, default true): Whether to enable termination protection on the Elasticsearch nodes.
 * \[`db_vl_type`\]: String(optional, default "gp2"): Type of the Elasticsearch data EBS volume.
 * \[`db_vl_iops`\]: String(optional, default ""): The amount of provisioned IOPS. This is only valid for db_vl_type of "io1", and must be specified if using that type
@@ -49,7 +48,7 @@ Terraform module to setup all resources needed for an Elasticsearch cluster.
 
 ```terraform
 module "elk_cluster" {
-  source              = "github.com/skyscrapers/terraform-elk_cluster?ref=1.0.0"
+  source              = "github.com/skyscrapers/terraform-elk_cluster?ref=2.1.0"
   project             = "${var.project}"
   environment         = "${var.environment}"
   cluster_size        = 3
@@ -57,7 +56,6 @@ module "elk_cluster" {
   kibana_enabled      = true
   ami                 = "ami-6c101b0a"
   instance_type       = "r3.large"
-  ebs_optimized       = "true
   key_name            = "mykey"
   vpc_id              = "${module.vpc.vpc_id}"
   subnet_ids          = "${module.vpc.private_db_subnets}"
