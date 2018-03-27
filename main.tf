@@ -1,5 +1,5 @@
 module "elk_instances" {
-  source                 = "github.com/skyscrapers/terraform-instances//instance?ref=2.0.14"
+  source                 = "github.com/skyscrapers/terraform-instances//instance?ref=2.2.0"
   project                = "${var.project}"
   environment            = "${var.environment}"
   name                   = "${var.name}"
@@ -19,7 +19,7 @@ variable "ebs_block_device_properties" {
 }
 
 module "elk_userdata" {
-  source              = "github.com/skyscrapers/terraform-skyscrapers//puppet-userdata?ref=1.0.1"
+  source              = "github.com/skyscrapers/terraform-instances//puppet-userdata?ref=2.2.0"
   amount_of_instances = "${var.cluster_size}"
   customer            = "${var.customer == "" ? "" : "${var.customer}-"}${var.project}"
   environment         = "${var.environment}"
