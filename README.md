@@ -2,7 +2,7 @@
 
 [![No Maintenance Intended](https://raw.githubusercontent.com/potch/unmaintained.tech/cdac2b665e1ca2c681eeca1305d784355ba3b988/badge.svg)](http://unmaintained.tech/)
 
-This project is deprecated and no longer maintained.
+This project is deprecated and no longer maintained. Please use the module [`terraform-awselasticsearch`](https://github.com/skyscrapers/terraform-awselasticsearch) instead.
 
 ## Description
 
