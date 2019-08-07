@@ -1,4 +1,10 @@
-# terraform-elk_cluster
+# DEPRECATED
+
+[![No Maintenance Intended](https://raw.githubusercontent.com/potch/unmaintained.tech/cdac2b665e1ca2c681eeca1305d784355ba3b988/badge.svg)](http://unmaintained.tech/)
+
+This project is deprecated and no longer maintained.
+
+## Description
 
 Terraform module to setup all resources needed for an Elasticsearch cluster.
 
